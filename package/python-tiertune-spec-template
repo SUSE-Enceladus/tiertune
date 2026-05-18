@@ -20,9 +20,11 @@
 %if 0%{?suse_version} && 0%{?suse_version} < 1600
 %global __python3 /usr/bin/python3.11
 %global python3_pkgversion 311
+%global python_name python3
 %else
 %{!?__python3: %global __python3 /usr/bin/python3}
 %{!?python3_pkgversion:%global python3_pkgversion 3}
+%global python_name python
 %endif
 
 %if %{undefined python3_sitelib}
@@ -49,6 +51,9 @@ BuildRequires:  python%{python3_pkgversion}-installer
 BuildRequires:  python%{python3_pkgversion}-poetry-core >= 1.2.0
 BuildRequires:  python%{python3_pkgversion}-wheel
 BuildRequires:  python%{python3_pkgversion}-setuptools
+BuildRequires:  %{python_name}-ec2metadata
+BuildRequires:  %{python_name}-azuremetadata
+BuildRequires:  %{python_name}-gcemetadata
 
 %description
 Tooling for the pubcloud team. Allows to pre-populate
@@ -69,6 +74,7 @@ Configure cloud instances based on their specific instance type.
 Summary:        TierTune - Configure AWS cloud instances
 Group:          %{pygroup}
 Requires:       python%{python3_pkgversion}-tiertune
+Requires:       %{python_name}-ec2metadata
 
 %description -n tiertune-aws
 Configure AWS cloud instances based on their specific instance type.
@@ -77,6 +83,7 @@ Configure AWS cloud instances based on their specific instance type.
 Summary:        TierTune - Configure Azure cloud instances
 Group:          %{pygroup}
 Requires:       python%{python3_pkgversion}-tiertune
+Requires:       %{python_name}-azuremetadata
 
 %description -n tiertune-azure
 Configure Azure cloud instances based on their specific instance type.
@@ -85,6 +92,7 @@ Configure Azure cloud instances based on their specific instance type.
 Summary:        TierTune - Configure GCE cloud instances
 Group:          %{pygroup}
 Requires:       python%{python3_pkgversion}-tiertune
+Requires:       %{python_name}-gcemetadata
 
 %description -n tiertune-gce
 Configure GCE cloud instances based on their specific instance type.
