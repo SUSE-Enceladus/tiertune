@@ -13,7 +13,7 @@ addFilter("position-independent-executable-suggested .*")
 addFilter("files-duplicate .*")
 addFilter("cross-directory-hard-link .*")
 
-# cgyle master package can't be noarch if sub packages are arch specific
+# tiertune master package can't be noarch if sub packages are arch specific
 addFilter("W: no-binary");
 
 # if we add a provides to the obsoleted another warning that the
