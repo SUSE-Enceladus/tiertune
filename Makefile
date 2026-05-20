@@ -24,6 +24,11 @@ test: setup
 		--cov-report=term-missing --cov-fail-under=100 \
 		--cov-config .coveragerc'
 
+black: setup
+	poetry run black \
+		--skip-string-normalization \
+		--line-length 80 tiertune test/unit/
+
 clean:
 	rm -rf dist
 

@@ -18,5 +18,6 @@
 """
 Global version information
 """
+
 __version__ = '0.0.1'
 __githash__ = '$Format:%H$'
