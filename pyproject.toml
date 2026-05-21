@@ -17,6 +17,7 @@ packages = [
 ]
 
 include = [
+   { path = "config", format = "sdist" },
    { path = "package", format = "sdist" },
    { path = "test", format = "sdist" },
    { path = "systemd", format = "sdist" },
