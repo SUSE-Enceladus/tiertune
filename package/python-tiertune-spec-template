@@ -66,6 +66,7 @@ Group:          %{pygroup}
 Requires:       python%{python3_pkgversion} >= 3.11
 Requires:       python%{python3_pkgversion}-setuptools
 Requires:       python%{python3_pkgversion}-PyYAML
+Requires:       procps
 
 %description -n python%{python3_pkgversion}-tiertune
 Configure cloud instances based on their specific instance type.
