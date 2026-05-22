@@ -15,7 +15,25 @@
 # You should have received a copy of the GNU General Public License
 # along with tiertune.  If not, see <http://www.gnu.org/licenses/>
 #
+import logging as log
+import sys
+
+from tiertune.exceptions import TierTuneError
+from tiertune.instance_type import InstanceType
+from tiertune.config import Config
+from tiertune.sysctl import SysCtl
 
 
 def main() -> None:
-    pass
+    try:
+        SysCtl.apply(
+            InstanceType.new('azure'), Config.read('/etc/tiertune-azure.yml')
+        )
+    except TierTuneError as issue:
+        # known exception, log information and exit
+        log.error('{}: {}'.format(type(issue).__name__, issue))
+        sys.exit(1)
+    except Exception:
+        # exception we did not expect, show python backtrace
+        log.error('Unexpected error:')
+        raise
