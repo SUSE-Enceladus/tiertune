@@ -28,7 +28,7 @@ class Config:
     """
 
     @staticmethod
-    def read(config_file: str) -> Dict[str, List[str]]:
+    def read(config_file: str) -> Dict[str, Dict[str, List[str]]]:
         if os.path.exists(config_file):
             log.info(f'Reading runtime config file: {config_file!r}')
             with open(config_file, 'r') as config:

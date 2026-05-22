@@ -16,8 +16,10 @@
 # along with tiertune. If not, see <http://www.gnu.org/licenses/>
 #
 import logging as log
+from typing import Dict, List
 
 from tiertune.command import Command
+from tiertune.instance_type.base import InstanceTypeBase
 
 
 class SysCtl:
@@ -32,3 +34,14 @@ class SysCtl:
         """
         log.info(f'Apply system setting: {setting}')
         Command.run(['sysctl', '-w', setting])
+
+    @staticmethod
+    def apply(
+        instance: InstanceTypeBase, config: Dict[str, Dict[str, List[str]]]
+    ) -> None:
+        instance_type = instance.get_instance_type()
+        if instance_type:
+            for setting in instance.get_settings(instance_type, config).get(
+                'sysctl', []
+            ):
+                SysCtl.set(setting)
