@@ -28,7 +28,7 @@ class InstanceTypeAws(InstanceTypeBase):
 
     def get_instance_type(self) -> str:
         """
-        Implementation in CSP specific InstanceType* class
+        Use ec2metadata to retrieve instance type name
         """
         metadata = Command.run(['ec2metadata', '--instance-type'])
         return metadata.output.strip() if metadata else ''

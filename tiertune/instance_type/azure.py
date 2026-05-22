@@ -28,7 +28,7 @@ class InstanceTypeAzure(InstanceTypeBase):
 
     def get_instance_type(self) -> str:
         """
-        Implementation in CSP specific InstanceType* class
+        Use azuremetadata to retrieve instance type name
         """
         metadata = Command.run(['azuremetadata', '--vmSize'])
         return metadata.output.strip() if metadata else ''

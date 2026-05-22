@@ -28,7 +28,7 @@ class InstanceTypeGce(InstanceTypeBase):
 
     def get_instance_type(self) -> str:
         """
-        Implementation in CSP specific InstanceType* class
+        Use gcemetadata to retrieve instance type name
         """
         metadata = Command.run(
             ['gcemetadata', '--query', 'instance', '--machine-type']
