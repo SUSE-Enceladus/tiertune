@@ -1,9 +1,7 @@
 [Unit]
 Description=Configure Azure instance
-ConditionFirstBoot=yes
-# Order before the target that finalizes the first boot state
-Before=first-boot-complete.target
-Wants=first-boot-complete.target
+After=local-fs.target
+ConditionPathExists=/etc/tiertune-azure.yml
 
 [Service]
 Type=oneshot
