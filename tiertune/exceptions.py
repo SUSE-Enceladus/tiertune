@@ -54,3 +54,9 @@ class TierTuneDecodingError(TierTuneError):
     """
     Exception is raised on decoding literals failure
     """
+
+
+class TierTuneInstanceTypeError(TierTuneError):
+    """
+    Exception raised if the InstanceType factory failed to load
+    """

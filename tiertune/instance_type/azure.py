@@ -15,20 +15,20 @@
 # You should have received a copy of the GNU General Public License
 # along with tiertune. If not, see <http://www.gnu.org/licenses/>
 #
-import logging as log
 
+# project
+from tiertune.instance_type.base import InstanceTypeBase
 from tiertune.command import Command
 
 
-class SysCtl:
+class InstanceTypeAzure(InstanceTypeBase):
     """
-    **Implements sysctl interface**
+    **Implements Azure instance type interface**
     """
 
-    @staticmethod
-    def set(setting: str) -> None:
+    def get_instance_type(self) -> str:
         """
-        Execute sysctl binary with given setting.
+        Implementation in CSP specific InstanceType* class
         """
-        log.info(f'Apply system setting: {setting}')
-        Command.run(['sysctl', '-w', setting])
+        metadata = Command.run(['azuremetadata', '--vmSize'])
+        return metadata.output.strip() if metadata else ''
