@@ -5,6 +5,7 @@ ConditionPathExists=/etc/tiertune-aws.yml
 
 [Service]
 Type=oneshot
+Environment="TIERTUNE_LOGLEVEL=DEBUG"
 ExecStart=/usr/bin/tiertune-aws
 RemainAfterExit=yes
 
