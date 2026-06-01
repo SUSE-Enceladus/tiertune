@@ -1,3 +1,2 @@
-an_aws_instance_type_name:
+an_aws_instance_type_name_or_pattern:
   sysctl:
-    - net.core.rmem_max=83886080
