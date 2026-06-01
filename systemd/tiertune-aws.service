@@ -1,7 +1,7 @@
 [Unit]
 Description=Configure AWS instance
 After=local-fs.target
-ConditionPathExists=/etc/tiertune-aws.yml
+ConditionPathExists=/usr/share/tiertune/tiertune-aws.yml
 
 [Service]
 Type=oneshot

@@ -1,7 +1,7 @@
 [Unit]
 Description=Configure Azure instance
 After=local-fs.target
-ConditionPathExists=/etc/tiertune-azure.yml
+ConditionPathExists=/usr/share/tiertune/tiertune-azure.yml
 
 [Service]
 Type=oneshot

@@ -1,7 +1,7 @@
 [Unit]
 Description=Configure GCE instance
 After=local-fs.target
-ConditionPathExists=/etc/tiertune-gce.yml
+ConditionPathExists=/usr/share/tiertune/tiertune-gce.yml
 
 [Service]
 Type=oneshot
