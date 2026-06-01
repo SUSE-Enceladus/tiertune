@@ -26,9 +26,7 @@ from tiertune.sysctl import SysCtl
 
 def main() -> None:
     try:
-        SysCtl.apply(
-            InstanceType.new('aws'), Config.read('/etc/tiertune-aws.yml')
-        )
+        SysCtl.apply(InstanceType.new('aws'), Config.read_aws())
     except TierTuneError as issue:
         # known exception, log information and exit
         log.error('{}: {}'.format(type(issue).__name__, issue))

@@ -17,9 +17,10 @@
 #
 import os
 import logging as log
-from typing import List, Dict
-
+from typing import Dict
 import yaml
+
+import tiertune.defaults as defaults
 
 
 class Config:
@@ -28,9 +29,60 @@ class Config:
     """
 
     @staticmethod
-    def read(config_file: str) -> Dict[str, Dict[str, List[str]]]:
+    def _merge(dict_master, dict_slave):
+        """
+        Simple deep merge adding everything from a slave dict to a master
+        """
+        for key, value in dict_master.items():
+            if key in dict_slave:
+                dict_slave[key] = Config._merge(value, dict_slave[key])
+        dict_master.update(dict_slave)
+        return dict_master
+
+    @staticmethod
+    def read(csp_name: str) -> Dict[str, Dict[str, Dict[str, str]]]:
+        runtime_config: Dict[str, Dict[str, Dict[str, str]]] = {}
+        config_file = defaults.ETC_RUNTIME_CONFIG_FILE.get(csp_name, '')
+        if not os.path.exists(config_file):
+            config_file = defaults.USR_RUNTIME_CONFIG_FILE.get(csp_name, '')
         if os.path.exists(config_file):
             log.info(f'Reading runtime config file: {config_file!r}')
             with open(config_file, 'r') as config:
-                return yaml.safe_load(config) or {}
-        return {}
+                runtime_config = yaml.safe_load(config) or {}
+
+            if config_file == defaults.ETC_RUNTIME_CONFIG_FILE.get(
+                csp_name, ''
+            ):
+                config_dir = defaults.ETC_RUNTIME_CONFIG_DIR.get(csp_name)
+            elif config_file == defaults.USR_RUNTIME_CONFIG_FILE.get(
+                csp_name, ''
+            ):
+                config_dir = defaults.USR_RUNTIME_CONFIG_DIR.get(csp_name, '')
+
+            if config_dir and os.path.isdir(config_dir):
+                for config_file in sorted(os.listdir(config_dir)):
+                    if config_file.endswith('.yml'):
+                        config_file_path = os.path.normpath(
+                            os.sep.join([config_dir, config_file])
+                        )
+                        log.info(
+                            f'--> Reading addon runtime config file: {config_file_path!r}'
+                        )
+                        with open(config_file_path, 'r') as config:
+                            additional_config = yaml.safe_load(config) or {}
+                            runtime_config = Config._merge(
+                                runtime_config, additional_config
+                            )
+        return runtime_config
+
+    @staticmethod
+    def read_azure() -> Dict[str, Dict[str, Dict[str, str]]]:
+        return Config.read('azure')
+
+    @staticmethod
+    def read_gce() -> Dict[str, Dict[str, Dict[str, str]]]:
+        return Config.read('gce')
+
+    @staticmethod
+    def read_aws() -> Dict[str, Dict[str, Dict[str, str]]]:
+        return Config.read('aws')

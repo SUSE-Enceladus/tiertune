@@ -26,9 +26,7 @@ from tiertune.sysctl import SysCtl
 
 def main() -> None:
     try:
-        SysCtl.apply(
-            InstanceType.new('azure'), Config.read('/etc/tiertune-azure.yml')
-        )
+        SysCtl.apply(InstanceType.new('azure'), Config.read_azure())
     except TierTuneError as issue:
         # known exception, log information and exit
         log.error('{}: {}'.format(type(issue).__name__, issue))
