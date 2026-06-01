@@ -16,7 +16,7 @@
 # along with tiertune. If not, see <http://www.gnu.org/licenses/>
 #
 import logging as log
-from typing import Dict, List
+from typing import Dict
 import re
 
 
@@ -32,17 +32,17 @@ class InstanceTypeBase:
         raise NotImplementedError
 
     def get_settings(
-        self, instance_type: str, config: Dict[str, Dict[str, List[str]]]
-    ) -> Dict[str, List[str]]:
+        self, instance_type: str, config: Dict[str, Dict[str, Dict[str, str]]]
+    ) -> Dict[str, Dict[str, str]]:
         """
         Evaluate settings for given instance_type and config
         """
-        result: Dict[str, List[str]] = {}
-        log.info('Lookup config settings for instance type: {instance_type}')
+        result: Dict[str, Dict[str, str]] = {}
+        log.info(f'Lookup config settings for instance type: {instance_type}')
         for type_pattern in config.keys():
             if re.match(type_pattern, instance_type):
-                log.info('Found matching entry: {type_pattern}')
+                log.info(f'Found matching entry: {type_pattern}')
                 result.update(config[type_pattern])
         if result:
-            log.info('Using settings dict: {result}')
+            log.info(f'Using settings dict: {result}')
         return result

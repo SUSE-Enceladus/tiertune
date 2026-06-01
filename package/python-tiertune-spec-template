@@ -120,30 +120,31 @@ install -m 644 systemd/tiertune-aws.service \
 install -m 644 systemd/tiertune-gce.service \
     %{buildroot}/usr/lib/systemd/system/tiertune-gce.service
 
-install -d -m 755 %{buildroot}/etc
-install -m 644 config/tiertune-azure.yml \
-    %{buildroot}/etc/tiertune-azure.yml
-install -m 644 config/tiertune-aws.yml \
-    %{buildroot}/etc/tiertune-aws.yml
-install -m 644 config/tiertune-gce.yml \
-    %{buildroot}/etc/tiertune-gce.yml
+install -d -m 755 %{buildroot}/usr/share/tiertune
+install -m 644 config/azure/tiertune-azure.yml \
+    %{buildroot}/usr/share/tiertune/tiertune-azure.yml
+install -m 644 config/aws/tiertune-aws.yml \
+    %{buildroot}/usr/share/tiertune/tiertune-aws.yml
+install -m 644 config/gce/tiertune-gce.yml \
+    %{buildroot}/usr/share/tiertune/tiertune-gce.yml
 
 %files -n python%{python3_pkgversion}-tiertune
+%dir /usr/share/tiertune
 %{python3_sitelib}/tiertune*
 
 %files -n tiertune-aws
 %{_bindir}/tiertune-aws
 %config %{_usr}/lib/systemd/system/tiertune-aws.service
-%config /etc/tiertune-aws.yml
+%config /usr/share/tiertune/tiertune-aws.yml
 
 %files -n tiertune-azure
 %{_bindir}/tiertune-azure
 %config %{_usr}/lib/systemd/system/tiertune-azure.service
-%config /etc/tiertune-azure.yml
+%config /usr/share/tiertune/tiertune-azure.yml
 
 %files -n tiertune-gce
 %{_bindir}/tiertune-gce
 %config %{_usr}/lib/systemd/system/tiertune-gce.service
-%config /etc/tiertune-gce.yml
+%config /usr/share/tiertune/tiertune-gce.yml
 
 %changelog

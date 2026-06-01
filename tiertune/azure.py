@@ -17,18 +17,22 @@
 #
 import logging as log
 import sys
+import os
 
 from tiertune.exceptions import TierTuneError
 from tiertune.instance_type import InstanceType
 from tiertune.config import Config
 from tiertune.sysctl import SysCtl
 
+log.basicConfig(
+    format='%(levelname)s:%(message)s',
+    level=os.environ.get('TIERTUNE_LOGLEVEL', log.INFO),
+)
+
 
 def main() -> None:
     try:
-        SysCtl.apply(
-            InstanceType.new('azure'), Config.read('/etc/tiertune-azure.yml')
-        )
+        SysCtl.apply(InstanceType.new('azure'), Config.read_azure())
     except TierTuneError as issue:
         # known exception, log information and exit
         log.error('{}: {}'.format(type(issue).__name__, issue))
