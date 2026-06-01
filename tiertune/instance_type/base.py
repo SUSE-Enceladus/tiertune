@@ -38,11 +38,11 @@ class InstanceTypeBase:
         Evaluate settings for given instance_type and config
         """
         result: Dict[str, Dict[str, str]] = {}
-        log.info('Lookup config settings for instance type: {instance_type}')
+        log.info(f'Lookup config settings for instance type: {instance_type}')
         for type_pattern in config.keys():
             if re.match(type_pattern, instance_type):
-                log.info('Found matching entry: {type_pattern}')
+                log.info(f'Found matching entry: {type_pattern}')
                 result.update(config[type_pattern])
         if result:
-            log.info('Using settings dict: {result}')
+            log.info(f'Using settings dict: {result}')
         return result
