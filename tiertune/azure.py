@@ -17,11 +17,17 @@
 #
 import logging as log
 import sys
+import os
 
 from tiertune.exceptions import TierTuneError
 from tiertune.instance_type import InstanceType
 from tiertune.config import Config
 from tiertune.sysctl import SysCtl
+
+log.basicConfig(
+    format='%(levelname)s:%(message)s',
+    level=os.environ.get('TIERTUNE_LOGLEVEL', log.INFO),
+)
 
 
 def main() -> None:
