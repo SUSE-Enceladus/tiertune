@@ -6,13 +6,23 @@ from tiertune.exceptions import TierTuneError
 
 
 class TestAzure:
+    @patch('tiertune.azure.SystemD.apply')
     @patch('tiertune.azure.SysCtl.apply')
     @patch('tiertune.azure.Config.read')
     @patch('tiertune.instance_type.InstanceType.new')
-    def test_main(self, mock_InstanceType, mock_Config_read, mock_SysCtl_apply):
+    def test_main(
+        self,
+        mock_InstanceType,
+        mock_Config_read,
+        mock_SysCtl_apply,
+        mock_SystemD_apply,
+    ):
         main()
         mock_InstanceType.assert_called_once_with('azure')
         mock_SysCtl_apply.assert_called_once_with(
+            mock_InstanceType.return_value, mock_Config_read.return_value
+        )
+        mock_SystemD_apply.assert_called_once_with(
             mock_InstanceType.return_value, mock_Config_read.return_value
         )
 

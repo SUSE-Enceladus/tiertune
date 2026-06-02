@@ -1,3 +1,4 @@
 an_aws_instance_type_name:
   sysctl:
     some: some
+  systemd:

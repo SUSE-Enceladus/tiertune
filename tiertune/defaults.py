@@ -38,3 +38,6 @@ USR_RUNTIME_CONFIG_DIR = {
     'gce': '/usr/share/tiertune/tiertune-gce.yml.d',
     'aws': '/usr/share/tiertune/tiertune-aws.yml.d',
 }
+
+# systemd main settings overlay
+SYSTEMD_CONF = '/etc/systemd/system.conf.d/tiertune.conf'

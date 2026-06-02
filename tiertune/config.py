@@ -33,10 +33,11 @@ class Config:
         """
         Simple deep merge adding everything from a slave dict to a master
         """
-        for key, value in dict_master.items():
-            if key in dict_slave:
-                dict_slave[key] = Config._merge(value, dict_slave[key])
-        dict_master.update(dict_slave)
+        if dict_slave:
+            for key, value in dict_master.items():
+                if key in dict_slave:
+                    dict_slave[key] = Config._merge(value, dict_slave[key])
+            dict_master.update(dict_slave)
         return dict_master
 
     @staticmethod

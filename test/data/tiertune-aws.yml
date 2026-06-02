@@ -1,3 +1,5 @@
 an_aws_instance_type_name:
   sysctl:
     "net.core.rmem_max": "83886080"
+  systemd:
+    "DefaultTimeoutStartSec": "300s"
