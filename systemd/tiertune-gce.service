@@ -1,5 +1,6 @@
 [Unit]
 Description=Configure GCE instance
+DefaultDependencies=no
 After=local-fs.target
 ConditionPathExists=/usr/share/tiertune/tiertune-gce.yml
 
@@ -10,4 +11,4 @@ ExecStart=/usr/bin/tiertune-gce
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sysinit.target

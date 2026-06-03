@@ -1,5 +1,6 @@
 [Unit]
 Description=Configure AWS instance
+DefaultDependencies=no
 After=local-fs.target
 ConditionPathExists=/usr/share/tiertune/tiertune-aws.yml
 
@@ -10,4 +11,4 @@ ExecStart=/usr/bin/tiertune-aws
 RemainAfterExit=yes
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=sysinit.target
