@@ -66,7 +66,12 @@ Group:          %{pygroup}
 Requires:       python%{python3_pkgversion} >= 3.11
 Requires:       python%{python3_pkgversion}-setuptools
 Requires:       python%{python3_pkgversion}-PyYAML
+# for sysctl interface
 Requires:       procps
+# for /dev/cpu_dma_latency interface
+Requires:       cpupower
+# for systemd interface
+Requires:       systemd
 
 %description -n python%{python3_pkgversion}-tiertune
 Configure cloud instances based on their specific instance type.

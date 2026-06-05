@@ -24,6 +24,7 @@ from tiertune.instance_type import InstanceType
 from tiertune.config import Config
 from tiertune.sysctl import SysCtl
 from tiertune.systemd import SystemD
+from tiertune.cpupower import CPUPower
 
 log.basicConfig(
     format='%(levelname)s:%(message)s',
@@ -37,6 +38,7 @@ def main() -> None:
         config = Config.read_gce()
         SysCtl.apply(instance_type, config)
         SystemD.apply(instance_type, config)
+        CPUPower.apply(instance_type, config)
     except TierTuneError as issue:
         # known exception, log information and exit
         log.error('{}: {}'.format(type(issue).__name__, issue))

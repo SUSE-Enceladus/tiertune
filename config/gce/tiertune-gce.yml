@@ -18,3 +18,5 @@
   systemd:
     "DefaultTimeoutStartSec": "300s"
     "DefaultTimeoutStopSec": "300s"
+  cpupower:
+    "force_latency": "6"

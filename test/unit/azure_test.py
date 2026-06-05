@@ -6,6 +6,7 @@ from tiertune.exceptions import TierTuneError
 
 
 class TestAzure:
+    @patch('tiertune.azure.CPUPower.apply')
     @patch('tiertune.azure.SystemD.apply')
     @patch('tiertune.azure.SysCtl.apply')
     @patch('tiertune.azure.Config.read')
@@ -16,6 +17,7 @@ class TestAzure:
         mock_Config_read,
         mock_SysCtl_apply,
         mock_SystemD_apply,
+        mock_CPUPower_apply,
     ):
         main()
         mock_InstanceType.assert_called_once_with('azure')
@@ -23,6 +25,9 @@ class TestAzure:
             mock_InstanceType.return_value, mock_Config_read.return_value
         )
         mock_SystemD_apply.assert_called_once_with(
+            mock_InstanceType.return_value, mock_Config_read.return_value
+        )
+        mock_CPUPower_apply.assert_called_once_with(
             mock_InstanceType.return_value, mock_Config_read.return_value
         )
 
