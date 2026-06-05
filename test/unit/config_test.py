@@ -26,6 +26,8 @@ class TestConfig:
         }
 
     def test_read_addon_usr(self):
+        defaults.ETC_RUNTIME_CONFIG_FILE = {}
+        defaults.ETC_RUNTIME_CONFIG_DIR = {}
         defaults.USR_RUNTIME_CONFIG_FILE = {'aws': '../data/tiertune-aws.yml'}
         defaults.USR_RUNTIME_CONFIG_DIR = {'aws': '../data/tiertune-aws.yml.d'}
         assert Config.read('aws') == {
