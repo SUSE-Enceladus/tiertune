@@ -1,2 +1,3 @@
 an_azure_instance_type_name_or_pattern:
   sysctl:
+  systemd:

@@ -23,6 +23,7 @@ from tiertune.exceptions import TierTuneError
 from tiertune.instance_type import InstanceType
 from tiertune.config import Config
 from tiertune.sysctl import SysCtl
+from tiertune.systemd import SystemD
 
 log.basicConfig(
     format='%(levelname)s:%(message)s',
@@ -32,7 +33,10 @@ log.basicConfig(
 
 def main() -> None:
     try:
-        SysCtl.apply(InstanceType.new('azure'), Config.read_azure())
+        instance_type = InstanceType.new('azure')
+        config = Config.read_azure()
+        SysCtl.apply(instance_type, config)
+        SystemD.apply(instance_type, config)
     except TierTuneError as issue:
         # known exception, log information and exit
         log.error('{}: {}'.format(type(issue).__name__, issue))

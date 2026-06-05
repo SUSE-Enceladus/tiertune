@@ -9,7 +9,8 @@ class TestConfig:
         defaults.ETC_RUNTIME_CONFIG_FILE = {'aws': '../data/tiertune-aws.yml'}
         assert Config.read('aws') == {
             'an_aws_instance_type_name': {
-                'sysctl': {'net.core.rmem_max': '83886080'}
+                'sysctl': {'net.core.rmem_max': '83886080'},
+                'systemd': {'DefaultTimeoutStartSec': '300s'},
             }
         }
         assert Config.read('bogus') == {}
@@ -19,7 +20,8 @@ class TestConfig:
         defaults.ETC_RUNTIME_CONFIG_DIR = {'aws': '../data/tiertune-aws.yml.d'}
         assert Config.read('aws') == {
             'an_aws_instance_type_name': {
-                'sysctl': {'net.core.rmem_max': '83886080', 'some': 'some'}
+                'sysctl': {'net.core.rmem_max': '83886080', 'some': 'some'},
+                'systemd': {'DefaultTimeoutStartSec': '300s'},
             }
         }
 
@@ -28,7 +30,8 @@ class TestConfig:
         defaults.USR_RUNTIME_CONFIG_DIR = {'aws': '../data/tiertune-aws.yml.d'}
         assert Config.read('aws') == {
             'an_aws_instance_type_name': {
-                'sysctl': {'net.core.rmem_max': '83886080', 'some': 'some'}
+                'sysctl': {'net.core.rmem_max': '83886080', 'some': 'some'},
+                'systemd': {'DefaultTimeoutStartSec': '300s'},
             }
         }
 
