@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tiertune"
-version = "0.0.3"
+version = "0.0.4"
 description = "tiertune - configure instance per type"
 license = "GPL-3.0-or-later"
 readme = "README.rst"
