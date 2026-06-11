@@ -19,11 +19,12 @@
 
 %if 0%{?suse_version} && 0%{?suse_version} < 1600
 %global __python3 /usr/bin/python3.11
-%global python3_pkgversion 311
+%global pythons python311
 %global python_name python3
-%else
+%endif
+
+%if 0%{?suse_version} && 0%{?suse_version} >= 1600
 %{!?__python3: %global __python3 /usr/bin/python3}
-%{!?python3_pkgversion:%global python3_pkgversion 3}
 %global python_name python
 %endif
 
@@ -45,12 +46,12 @@ Group:          %{pygroup}
 Source:         %{name}.tar.gz
 Source1:        %{name}-rpmlintrc
 BuildRoot:      %{_tmppath}/%{name}-%{version}-build
-BuildRequires:  python%{python3_pkgversion}-%{develsuffix} >= 3.11
-BuildRequires:  python%{python3_pkgversion}-build
-BuildRequires:  python%{python3_pkgversion}-installer
-BuildRequires:  python%{python3_pkgversion}-poetry-core >= 1.2.0
-BuildRequires:  python%{python3_pkgversion}-wheel
-BuildRequires:  python%{python3_pkgversion}-setuptools
+BuildRequires:  %{pythons}-%{develsuffix} >= 3.11
+BuildRequires:  %{pythons}-build
+BuildRequires:  %{pythons}-installer
+BuildRequires:  %{pythons}-poetry-core >= 1.2.0
+BuildRequires:  %{pythons}-wheel
+BuildRequires:  %{pythons}-setuptools
 BuildRequires:  %{python_name}-ec2metadata
 BuildRequires:  %{python_name}-azuremetadata
 BuildRequires:  %{python_name}-gcemetadata
@@ -60,12 +61,12 @@ Tooling for the pubcloud team. Allows to pre-populate
 containers in a distribution registry
 
 # python3xx-tiertune
-%package -n python%{python3_pkgversion}-tiertune
+%package -n %{pythons}-tiertune
 Summary:        TierTune - Configure cloud instances
 Group:          %{pygroup}
-Requires:       python%{python3_pkgversion} >= 3.11
-Requires:       python%{python3_pkgversion}-setuptools
-Requires:       python%{python3_pkgversion}-PyYAML
+Requires:       %{pythons} >= 3.11
+Requires:       %{pythons}-setuptools
+Requires:       %{pythons}-PyYAML
 # for sysctl interface
 Requires:       procps
 # for /dev/cpu_dma_latency interface
@@ -73,13 +74,13 @@ Requires:       cpupower
 # for systemd interface
 Requires:       systemd
 
-%description -n python%{python3_pkgversion}-tiertune
+%description -n %{pythons}-tiertune
 Configure cloud instances based on their specific instance type.
 
 %package -n tiertune-aws
 Summary:        TierTune - Configure AWS cloud instances
 Group:          %{pygroup}
-Requires:       python%{python3_pkgversion}-tiertune
+Requires:       %{pythons}-tiertune
 Requires:       %{python_name}-ec2metadata
 
 %description -n tiertune-aws
@@ -88,7 +89,7 @@ Configure AWS cloud instances based on their specific instance type.
 %package -n tiertune-azure
 Summary:        TierTune - Configure Azure cloud instances
 Group:          %{pygroup}
-Requires:       python%{python3_pkgversion}-tiertune
+Requires:       %{pythons}-tiertune
 Requires:       %{python_name}-azuremetadata
 
 %description -n tiertune-azure
@@ -97,7 +98,7 @@ Configure Azure cloud instances based on their specific instance type.
 %package -n tiertune-gce
 Summary:        TierTune - Configure GCE cloud instances
 Group:          %{pygroup}
-Requires:       python%{python3_pkgversion}-tiertune
+Requires:       %{pythons}-tiertune
 Requires:       %{python_name}-gcemetadata
 
 %description -n tiertune-gce
@@ -133,7 +134,7 @@ install -m 644 config/aws/tiertune-aws.yml \
 install -m 644 config/gce/tiertune-gce.yml \
     %{buildroot}/usr/share/tiertune/tiertune-gce.yml
 
-%files -n python%{python3_pkgversion}-tiertune
+%files -n %{pythons}-tiertune
 %dir /usr/share/tiertune
 %{python3_sitelib}/tiertune*
 
