@@ -30,22 +30,22 @@ class SystemD:
     **Implements systemd settings interface**
     """
 
-    _set_called = False
+    def __init__(self) -> None:
+        self._set_called = False
 
     def __enter__(self) -> 'SystemD':
-        SystemD._set_called = False
+        self._set_called = False
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        if exc_type is None and SystemD._set_called:
+    def __exit__(self, exc_type, exc_value, exc_tb) -> None:
+        if exc_type is None and self._set_called:
             write_state_file()
 
-    @classmethod
-    def set(cls, setting: str) -> None:
+    def set(self, setting: str) -> None:
         """
         Append systemd settings to an overlay file.
         """
-        cls._set_called = True
+        self._set_called = True
         log.info(f'Set systemd global setting: {setting}')
         with open(SYSTEMD_CONF, 'a') as systemd:
             systemd.write(f'{setting}\n')

@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with tiertune.  If not, see <http://www.gnu.org/licenses/>
 #
+import os
+
 # optional system wide config file location
 ETC_RUNTIME_CONFIG_FILE = {
     'azure': '/etc/tiertune-azure.yml',
@@ -47,5 +49,6 @@ SETTINGS_APPLIED_FILE = '/var/cache/tiertune/settings_applied'
 
 
 def write_state_file() -> None:
+    os.makedirs(os.path.dirname(SETTINGS_APPLIED_FILE), exist_ok=True)
     with open(SETTINGS_APPLIED_FILE, 'w'):
         pass

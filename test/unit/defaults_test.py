@@ -5,7 +5,9 @@ from tiertune.defaults import write_state_file
 
 
 class TestDefaults:
+    @patch('os.makedirs')
     @patch('builtins.open')
-    def test_write_state_file(self, mock_open):
+    def test_write_state_file(self, mock_open, mock_makedirs):
         write_state_file()
+        mock_makedirs.assert_called_once_with('/var/cache/tiertune', exist_ok=True)
         mock_open.assert_called_once_with(SETTINGS_APPLIED_FILE, 'w')

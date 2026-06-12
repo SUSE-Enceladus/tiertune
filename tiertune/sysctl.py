@@ -28,22 +28,22 @@ class SysCtl:
     **Implements sysctl interface**
     """
 
-    _set_called = False
+    def __init__(self) -> None:
+        self._set_called = False
 
     def __enter__(self) -> 'SysCtl':
-        SysCtl._set_called = False
+        self._set_called = False
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        if exc_type is None and SysCtl._set_called:
+    def __exit__(self, exc_type, exc_value, exc_tb) -> None:
+        if exc_type is None and self._set_called:
             write_state_file()
 
-    @classmethod
-    def set(cls, setting: str) -> None:
+    def set(self, setting: str) -> None:
         """
         Execute sysctl binary with given setting.
         """
-        cls._set_called = True
+        self._set_called = True
         log.info(f'Apply system setting: {setting}')
         Command.run(['sysctl', '-w', setting])
 

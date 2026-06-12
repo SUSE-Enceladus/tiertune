@@ -9,14 +9,14 @@ import tiertune.defaults as defaults
 class TestCPUPower:
     @patch('tiertune.command.Command.run')
     def test_set(self, mock_Command_run):
-        CPUPower.set('force_latency', '6')
+        CPUPower().set('force_latency', '6')
         mock_Command_run.assert_called_once_with(
             ['cpupower', 'idle-set', '--disable-by-latency', '6']
         )
 
     @patch('tiertune.command.Command.run')
     def test_set_unknown_setting(self, mock_Command_run):
-        CPUPower.set('some', 'some')
+        CPUPower().set('some', 'some')
         assert not mock_Command_run.called
 
     @patch('tiertune.cpupower.CPUPower.set')

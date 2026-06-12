@@ -28,22 +28,22 @@ class CPUPower:
     **Implements cpupower settings interface**
     """
 
-    _set_called = False
+    def __init__(self) -> None:
+        self._set_called = False
 
     def __enter__(self) -> 'CPUPower':
-        CPUPower._set_called = False
+        self._set_called = False
         return self
 
-    def __exit__(self, exc_type, exc_value, traceback) -> None:
-        if exc_type is None and CPUPower._set_called:
+    def __exit__(self, exc_type, exc_value, exc_tb) -> None:
+        if exc_type is None and self._set_called:
             write_state_file()
 
-    @classmethod
-    def set(cls, key: str, value: str) -> None:
+    def set(self, key: str, value: str) -> None:
         """
         call cpupower for selected settings.
         """
-        cls._set_called = True
+        self._set_called = True
         if key == 'force_latency' and value:
             log.info(f'Set CPU setting: {key}={value}')
             Command.run(['cpupower', 'idle-set', '--disable-by-latency', value])

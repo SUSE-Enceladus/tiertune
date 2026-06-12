@@ -12,7 +12,7 @@ class TestSystemD:
         with patch('builtins.open', create=True) as mock_open:
             mock_open.return_value = MagicMock(spec=io.IOBase)
             file_handle = mock_open.return_value.__enter__.return_value
-            SystemD.set('DefaultTimeoutStartSec=300s')
+            SystemD().set('DefaultTimeoutStartSec=300s')
             mock_open.assert_called_once_with(
                 '/etc/systemd/system.conf.d/tiertune.conf', 'a'
             )
