@@ -59,8 +59,8 @@ class CPUPower:
         instance_type = instance.get_instance_type()
         if instance_type:
             with CPUPower() as cpupower:
-                settings_dict = instance.get_settings(instance_type, config).get(
-                    'cpupower', {}
-                )
+                settings_dict = instance.get_settings(
+                    instance_type, config
+                ).get('cpupower', {})
                 for key in sorted(settings_dict.keys()):
                     cpupower.set(key, settings_dict.get(key, ''))

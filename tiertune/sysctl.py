@@ -54,12 +54,16 @@ class SysCtl:
         instance_type = instance.get_instance_type()
         if instance_type:
             with SysCtl() as sysctl:
-                settings_dict = instance.get_settings(instance_type, config).get(
-                    'sysctl', {}
-                )
+                settings_dict = instance.get_settings(
+                    instance_type, config
+                ).get('sysctl', {})
                 for key in sorted(settings_dict.keys()):
                     setting = '{}{}'.format(
                         key,
-                        f'={settings_dict[key]}' if key in settings_dict else '',
+                        (
+                            f'={settings_dict[key]}'
+                            if key in settings_dict
+                            else ''
+                        ),
                     )
                     sysctl.set(setting)

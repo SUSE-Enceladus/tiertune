@@ -59,13 +59,17 @@ class SystemD:
             with SystemD() as systemd:
                 if os.path.exists(SYSTEMD_CONF):
                     os.unlink(SYSTEMD_CONF)
-                settings_dict = instance.get_settings(instance_type, config).get(
-                    'systemd', {}
-                )
+                settings_dict = instance.get_settings(
+                    instance_type, config
+                ).get('systemd', {})
                 for key in sorted(settings_dict.keys()):
                     setting = '{}{}'.format(
                         key,
-                        f'={settings_dict[key]}' if key in settings_dict else '',
+                        (
+                            f'={settings_dict[key]}'
+                            if key in settings_dict
+                            else ''
+                        ),
                     )
                     systemd.set(setting)
                 log.info('Apply systemd settings...')
