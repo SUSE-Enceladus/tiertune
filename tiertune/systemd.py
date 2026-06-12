@@ -20,8 +20,9 @@ import os
 from typing import Dict
 
 from tiertune.command import Command
-from tiertune.instance_type.base import InstanceTypeBase
 from tiertune.defaults import SYSTEMD_CONF
+from tiertune.defaults import write_state_file
+from tiertune.instance_type.base import InstanceTypeBase
 
 
 class SystemD:
@@ -29,11 +30,22 @@ class SystemD:
     **Implements systemd settings interface**
     """
 
-    @staticmethod
-    def set(setting: str) -> None:
+    def __init__(self) -> None:
+        self._set_called = False
+
+    def __enter__(self) -> 'SystemD':
+        self._set_called = False
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb) -> None:
+        if exc_type is None and self._set_called:
+            write_state_file()
+
+    def set(self, setting: str) -> None:
         """
         Append systemd settings to an overlay file.
         """
+        self._set_called = True
         log.info(f'Set systemd global setting: {setting}')
         with open(SYSTEMD_CONF, 'a') as systemd:
             systemd.write(f'{setting}\n')
@@ -44,16 +56,21 @@ class SystemD:
     ) -> None:
         instance_type = instance.get_instance_type()
         if instance_type:
-            if os.path.exists(SYSTEMD_CONF):
-                os.unlink(SYSTEMD_CONF)
-            settings_dict = instance.get_settings(instance_type, config).get(
-                'systemd', {}
-            )
-            for key in sorted(settings_dict.keys()):
-                setting = '{}{}'.format(
-                    key,
-                    f'={settings_dict[key]}' if key in settings_dict else '',
-                )
-                SystemD.set(setting)
-            log.info('Apply systemd settings...')
-            Command.run(['systemctl', 'daemon-reload'])
+            with SystemD() as systemd:
+                if os.path.exists(SYSTEMD_CONF):
+                    os.unlink(SYSTEMD_CONF)
+                settings_dict = instance.get_settings(
+                    instance_type, config
+                ).get('systemd', {})
+                for key in sorted(settings_dict.keys()):
+                    setting = '{}{}'.format(
+                        key,
+                        (
+                            f'={settings_dict[key]}'
+                            if key in settings_dict
+                            else ''
+                        ),
+                    )
+                    systemd.set(setting)
+                log.info('Apply systemd settings...')
+                Command.run(['systemctl', 'daemon-reload'])

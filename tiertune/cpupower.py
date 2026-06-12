@@ -19,6 +19,7 @@ import logging as log
 from typing import Dict
 
 from tiertune.command import Command
+from tiertune.defaults import write_state_file
 from tiertune.instance_type.base import InstanceTypeBase
 
 
@@ -27,11 +28,22 @@ class CPUPower:
     **Implements cpupower settings interface**
     """
 
-    @staticmethod
-    def set(key: str, value: str) -> None:
+    def __init__(self) -> None:
+        self._set_called = False
+
+    def __enter__(self) -> 'CPUPower':
+        self._set_called = False
+        return self
+
+    def __exit__(self, exc_type, exc_value, exc_tb) -> None:
+        if exc_type is None and self._set_called:
+            write_state_file()
+
+    def set(self, key: str, value: str) -> None:
         """
         call cpupower for selected settings.
         """
+        self._set_called = True
         if key == 'force_latency' and value:
             log.info(f'Set CPU setting: {key}={value}')
             Command.run(['cpupower', 'idle-set', '--disable-by-latency', value])
@@ -46,8 +58,9 @@ class CPUPower:
     ) -> None:
         instance_type = instance.get_instance_type()
         if instance_type:
-            settings_dict = instance.get_settings(instance_type, config).get(
-                'cpupower', {}
-            )
-            for key in sorted(settings_dict.keys()):
-                CPUPower.set(key, settings_dict.get(key, ''))
+            with CPUPower() as cpupower:
+                settings_dict = instance.get_settings(
+                    instance_type, config
+                ).get('cpupower', {})
+                for key in sorted(settings_dict.keys()):
+                    cpupower.set(key, settings_dict.get(key, ''))

@@ -12,7 +12,7 @@ class TestSystemD:
         with patch('builtins.open', create=True) as mock_open:
             mock_open.return_value = MagicMock(spec=io.IOBase)
             file_handle = mock_open.return_value.__enter__.return_value
-            SystemD.set('DefaultTimeoutStartSec=300s')
+            SystemD().set('DefaultTimeoutStartSec=300s')
             mock_open.assert_called_once_with(
                 '/etc/systemd/system.conf.d/tiertune.conf', 'a'
             )
@@ -42,3 +42,19 @@ class TestSystemD:
             '/etc/systemd/system.conf.d/tiertune.conf'
         )
         mock_Command_run.assert_called_once_with(['systemctl', 'daemon-reload'])
+
+    @patch('tiertune.systemd.write_state_file')
+    def test_context_manager_writes_state_file(self, mock_write_state_file):
+        with patch('builtins.open', create=True) as mock_open:
+            mock_open.return_value = MagicMock(spec=io.IOBase)
+            with SystemD() as systemd:
+                systemd.set('DefaultTimeoutStartSec=300s')
+        mock_write_state_file.assert_called_once()
+
+    @patch('tiertune.systemd.write_state_file')
+    def test_context_manager_without_set_does_not_write_state_file(
+        self, mock_write_state_file
+    ):
+        with SystemD():
+            pass
+        assert not mock_write_state_file.called
