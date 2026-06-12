@@ -41,3 +41,11 @@ USR_RUNTIME_CONFIG_DIR = {
 
 # systemd main settings overlay
 SYSTEMD_CONF = '/etc/systemd/system.conf.d/tiertune.conf'
+
+# marker file to indicate settings have been applied
+SETTINGS_APPLIED_FILE = '/var/cache/tiertune/settings_applied'
+
+
+def write_state_file() -> None:
+    with open(SETTINGS_APPLIED_FILE, 'w'):
+        pass

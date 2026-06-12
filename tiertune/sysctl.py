@@ -19,6 +19,7 @@ import logging as log
 from typing import Dict
 
 from tiertune.command import Command
+from tiertune.defaults import write_state_file
 from tiertune.instance_type.base import InstanceTypeBase
 
 
@@ -27,11 +28,22 @@ class SysCtl:
     **Implements sysctl interface**
     """
 
-    @staticmethod
-    def set(setting: str) -> None:
+    _set_called = False
+
+    def __enter__(self) -> 'SysCtl':
+        SysCtl._set_called = False
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback) -> None:
+        if exc_type is None and SysCtl._set_called:
+            write_state_file()
+
+    @classmethod
+    def set(cls, setting: str) -> None:
         """
         Execute sysctl binary with given setting.
         """
+        cls._set_called = True
         log.info(f'Apply system setting: {setting}')
         Command.run(['sysctl', '-w', setting])
 
@@ -41,12 +53,13 @@ class SysCtl:
     ) -> None:
         instance_type = instance.get_instance_type()
         if instance_type:
-            settings_dict = instance.get_settings(instance_type, config).get(
-                'sysctl', {}
-            )
-            for key in sorted(settings_dict.keys()):
-                setting = '{}{}'.format(
-                    key,
-                    f'={settings_dict[key]}' if key in settings_dict else '',
+            with SysCtl() as sysctl:
+                settings_dict = instance.get_settings(instance_type, config).get(
+                    'sysctl', {}
                 )
-                SysCtl.set(setting)
+                for key in sorted(settings_dict.keys()):
+                    setting = '{}{}'.format(
+                        key,
+                        f'={settings_dict[key]}' if key in settings_dict else '',
+                    )
+                    sysctl.set(setting)
