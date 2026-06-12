@@ -73,6 +73,8 @@ Requires:       procps
 Requires:       cpupower
 # for systemd interface
 Requires:       systemd
+# for tuned interface
+Requires:       tuned
 
 %description -n %{pythons}-tiertune
 Configure cloud instances based on their specific instance type.
@@ -127,12 +129,17 @@ install -m 644 systemd/tiertune-gce.service \
     %{buildroot}/usr/lib/systemd/system/tiertune-gce.service
 
 install -d -m 755 %{buildroot}/usr/share/tiertune
+
 install -m 644 config/azure/tiertune-azure.yml \
     %{buildroot}/usr/share/tiertune/tiertune-azure.yml
+
 install -m 644 config/aws/tiertune-aws.yml \
     %{buildroot}/usr/share/tiertune/tiertune-aws.yml
+
 install -m 644 config/gce/tiertune-gce.yml \
     %{buildroot}/usr/share/tiertune/tiertune-gce.yml
+install -m 644 config/gce/tiertune-gce-x4-tuned.conf \
+    %{buildroot}/usr/share/tiertune/tiertune-gce-x4-tuned.conf
 
 %files -n %{pythons}-tiertune
 %dir /usr/share/tiertune
@@ -151,6 +158,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %files -n tiertune-gce
 %{_bindir}/tiertune-gce
 %config %{_usr}/lib/systemd/system/tiertune-gce.service
+%config /usr/share/tiertune/tiertune-gce-x4-tuned.conf
 %config /usr/share/tiertune/tiertune-gce.yml
 
 %changelog
