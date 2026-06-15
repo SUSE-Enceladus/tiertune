@@ -8,6 +8,7 @@ ConditionPathExists=/usr/share/tiertune/tiertune-azure.yml
 Type=oneshot
 Environment="TIERTUNE_LOGLEVEL=DEBUG"
 ExecStart=/usr/bin/tiertune-azure
+ExecStopPost=/usr/bin/rm -f /etc/systemd/system.conf.d/tiertune.conf
 RemainAfterExit=yes
 
 [Install]
