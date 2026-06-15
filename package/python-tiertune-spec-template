@@ -142,15 +142,18 @@ install -m 644 config/gce/tiertune-gce.yml \
 %{_bindir}/tiertune-aws
 %config %{_usr}/lib/systemd/system/tiertune-aws.service
 %config /usr/share/tiertune/tiertune-aws.yml
+%ghost /var/cache/tiertune/settings_applied
 
 %files -n tiertune-azure
 %{_bindir}/tiertune-azure
 %config %{_usr}/lib/systemd/system/tiertune-azure.service
 %config /usr/share/tiertune/tiertune-azure.yml
+%ghost /var/cache/tiertune/settings_applied
 
 %files -n tiertune-gce
 %{_bindir}/tiertune-gce
 %config %{_usr}/lib/systemd/system/tiertune-gce.service
 %config /usr/share/tiertune/tiertune-gce.yml
+%ghost /var/cache/tiertune/settings_applied
 
 %changelog
