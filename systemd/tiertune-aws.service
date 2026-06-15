@@ -1,6 +1,7 @@
 [Unit]
 Description=Configure AWS instance
 DefaultDependencies=no
+ConditionFirstBoot=yes
 After=local-fs.target
 ConditionPathExists=/usr/share/tiertune/tiertune-aws.yml
 

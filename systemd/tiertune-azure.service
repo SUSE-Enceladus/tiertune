@@ -1,6 +1,7 @@
 [Unit]
 Description=Configure Azure instance
 DefaultDependencies=no
+ConditionFirstBoot=yes
 After=local-fs.target
 ConditionPathExists=/usr/share/tiertune/tiertune-azure.yml
 
