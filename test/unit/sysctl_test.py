@@ -1,4 +1,5 @@
-from unittest.mock import patch, Mock
+import io
+from unittest.mock import patch, Mock, MagicMock
 
 from tiertune.sysctl import SysCtl
 from tiertune.instance_type import InstanceType
@@ -9,36 +10,45 @@ import tiertune.defaults as defaults
 class TestSysCtl:
     @patch('tiertune.command.Command.run')
     def test_set(self, mock_Command_run):
-        SysCtl().set('net.ipv4.ip_local_port_range="9000 65499"')
-        mock_Command_run.assert_called_once_with(
-            ['sysctl', '-w', 'net.ipv4.ip_local_port_range="9000 65499"']
-        )
+        with patch('builtins.open', create=True) as mock_open:
+            mock_open.return_value = MagicMock(spec=io.IOBase)
+            file_handle = mock_open.return_value.__enter__.return_value
+            SysCtl().set('net.ipv4.ip_local_port_range="9000 65499"')
+            mock_Command_run.assert_called_once_with(
+                ['sysctl', '-w', 'net.ipv4.ip_local_port_range="9000 65499"']
+            )
+            mock_open.assert_called_once_with(
+                '/etc/sysctl.d/tiertune.conf', 'a'
+            )
+            file_handle.write.assert_called_once_with(
+                'net.ipv4.ip_local_port_range="9000 65499"\n'
+            )
 
-    @patch('tiertune.sysctl.write_state_file')
-    @patch('tiertune.command.Command.run')
-    def test_apply(self, mock_Command_run, mock_write_state_file):
+    @patch('tiertune.sysctl.SysCtl.set')
+    @patch('os.path.exists')
+    @patch('os.unlink')
+    def test_apply(self, mock_os_unlink, mock_os_path_exists, mock_SysCtl_set):
+        mock_os_path_exists.return_value = True
         defaults.ETC_RUNTIME_CONFIG_FILE = {'aws': '../data/tiertune-aws.yml'}
         instance = InstanceType.new('aws')
         instance.get_instance_type = Mock(
             return_value='an_aws_instance_type_name'
         )
         SysCtl.apply(instance, Config.read_aws())
-        mock_Command_run.assert_called_once_with(
-            ['sysctl', '-w', 'net.core.rmem_max=83886080']
-        )
-        mock_write_state_file.assert_called_once()
+        mock_os_unlink.assert_called_once_with('/etc/sysctl.d/tiertune.conf')
 
     @patch('tiertune.sysctl.write_state_file')
     @patch('tiertune.command.Command.run')
     def test_context_manager_writes_state_file(
         self, mock_Command_run, mock_write_state_file
     ):
-        with SysCtl() as sysctl:
-            sysctl.set('net.core.rmem_max=83886080')
-        mock_Command_run.assert_called_once_with(
-            ['sysctl', '-w', 'net.core.rmem_max=83886080']
-        )
-        mock_write_state_file.assert_called_once()
+        with patch('builtins.open', create=True):
+            with SysCtl() as sysctl:
+                sysctl.set('net.core.rmem_max=83886080')
+            mock_Command_run.assert_called_once_with(
+                ['sysctl', '-w', 'net.core.rmem_max=83886080']
+            )
+            mock_write_state_file.assert_called_once()
 
     @patch('tiertune.sysctl.write_state_file')
     def test_context_manager_without_set_does_not_write_state_file(
