@@ -81,7 +81,7 @@ Configure cloud instances based on their specific instance type.
 %package -n tiertune-aws
 Summary:        TierTune - Configure AWS cloud instances
 Group:          %{pygroup}
-Requires:       %{pythons}-tiertune
+Requires:       %{pythons}-tiertune = %{version}-%{release}
 Requires:       %{python_name}-ec2metadata
 
 %description -n tiertune-aws
@@ -90,7 +90,7 @@ Configure AWS cloud instances based on their specific instance type.
 %package -n tiertune-azure
 Summary:        TierTune - Configure Azure cloud instances
 Group:          %{pygroup}
-Requires:       %{pythons}-tiertune
+Requires:       %{pythons}-tiertune = %{version}-%{release}
 Requires:       %{python_name}-azuremetadata
 
 %description -n tiertune-azure
@@ -99,7 +99,7 @@ Configure Azure cloud instances based on their specific instance type.
 %package -n tiertune-gce
 Summary:        TierTune - Configure GCE cloud instances
 Group:          %{pygroup}
-Requires:       %{pythons}-tiertune
+Requires:       %{pythons}-tiertune = %{version}-%{release}
 Requires:       %{python_name}-gcemetadata
 
 %description -n tiertune-gce
