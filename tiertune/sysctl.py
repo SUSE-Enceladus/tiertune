@@ -15,11 +15,13 @@
 # You should have received a copy of the GNU General Public License
 # along with tiertune. If not, see <http://www.gnu.org/licenses/>
 #
+import os
 import logging as log
 from typing import Dict
 
 from tiertune.command import Command
 from tiertune.defaults import write_state_file
+from tiertune.defaults import SYSCTL_CONF
 from tiertune.instance_type.base import InstanceTypeBase
 
 
@@ -46,6 +48,8 @@ class SysCtl:
         self._set_called = True
         log.info(f'Apply system setting: {setting}')
         Command.run(['sysctl', '-w', setting])
+        with open(SYSCTL_CONF, 'a') as sysctl:
+            sysctl.write(f'{setting}\n')
 
     @staticmethod
     def apply(
@@ -54,6 +58,8 @@ class SysCtl:
         instance_type = instance.get_instance_type()
         if instance_type:
             with SysCtl() as sysctl:
+                if os.path.exists(SYSCTL_CONF):
+                    os.unlink(SYSCTL_CONF)
                 settings_dict = instance.get_settings(
                     instance_type, config
                 ).get('sysctl', {})
