@@ -1,4 +1,4 @@
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, Mock, patch, call
 
 from tiertune.cpupower import CPUPower
 from tiertune.instance_type import InstanceType
@@ -22,14 +22,17 @@ class TestCPUPower:
             ]
             CPUPower().set('force_latency', '6')
 
-        mock_Command_run.assert_called_once_with(
-            ['cpupower', 'idle-set', '--disable-by-latency', '6']
-        )
+        assert mock_Command_run.call_args_list == [
+            call(
+                ['/usr/bin/cpupower', 'idle-set', '--disable-by-latency', '6']
+            ),
+            call(['systemctl', 'enable', 'cpupower.service']),
+        ]
         mock_os_makedirs.assert_called_once_with(
             '/etc/systemd/system', exist_ok=True
         )
         service_handle.write.assert_called_once_with(
-            '[Service]\nExecStart=cpupower idle-set --disable-by-latency 6\n'
+            '[Service]\nExecStart=/usr/bin/cpupower idle-set --disable-by-latency 6\n'
         )
 
     @patch('tiertune.command.Command.run')
@@ -56,10 +59,7 @@ class TestCPUPower:
         with CPUPower() as cpupower:
             cpupower.set('force_latency', '6')
         mock_write_service.assert_called_once_with(
-            ['cpupower', 'idle-set', '--disable-by-latency', '6']
-        )
-        mock_Command_run.assert_called_once_with(
-            ['cpupower', 'idle-set', '--disable-by-latency', '6']
+            ['/usr/bin/cpupower', 'idle-set', '--disable-by-latency', '6']
         )
         mock_write_state_file.assert_called_once()
 

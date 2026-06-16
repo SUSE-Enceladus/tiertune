@@ -17,7 +17,9 @@
 #
 import logging as log
 import os
+import shutil
 from typing import Dict
+from string import Template
 
 from tiertune.command import Command
 from tiertune.defaults import CPUPOWER_SERVICE
@@ -51,10 +53,18 @@ class CPUPower:
         """
         self._set_called = True
         if key == 'force_latency' and value:
-            command = ['cpupower', 'idle-set', '--disable-by-latency', value]
             log.info(f'Set CPU setting: {key}={value}')
-            self._write_service(command)
-            Command.run(command)
+            cpupower = [
+                shutil.which('cpupower') or '/usr/bin/cpupower',
+                'idle-set',
+                '--disable-by-latency',
+                value,
+            ]
+            Command.run(cpupower)
+            self._write_service(cpupower)
+            Command.run(
+                ['systemctl', 'enable', os.path.basename(CPUPOWER_SERVICE)]
+            )
         else:
             log.info(
                 'Unknown CPU setting: {} with value {}'.format(key, value or '')
@@ -62,7 +72,10 @@ class CPUPower:
 
     def _write_service(self, command: list[str]) -> None:
         with open(self._template_file, 'r') as template:
-            service = template.read().replace('$command', ' '.join(command))
+            cpupower_service_source = Template(template.read())
+            service = cpupower_service_source.substitute(
+                {'command': ' '.join(command)}
+            )
         os.makedirs(os.path.dirname(CPUPOWER_SERVICE), exist_ok=True)
         with open(CPUPOWER_SERVICE, 'w') as service_file:
             service_file.write(service)
