@@ -1,4 +1,4 @@
-from unittest.mock import patch, Mock
+from unittest.mock import MagicMock, Mock, patch
 
 from tiertune.cpupower import CPUPower
 from tiertune.instance_type import InstanceType
@@ -8,10 +8,28 @@ import tiertune.defaults as defaults
 
 class TestCPUPower:
     @patch('tiertune.command.Command.run')
-    def test_set(self, mock_Command_run):
-        CPUPower().set('force_latency', '6')
+    @patch('os.makedirs')
+    def test_set(self, mock_os_makedirs, mock_Command_run):
+        with patch('builtins.open', create=True) as mock_open:
+            template_handle = MagicMock()
+            template_handle.read.return_value = (
+                '[Service]\nExecStart=$command\n'
+            )
+            service_handle = MagicMock()
+            mock_open.side_effect = [
+                MagicMock(__enter__=MagicMock(return_value=template_handle)),
+                MagicMock(__enter__=MagicMock(return_value=service_handle)),
+            ]
+            CPUPower().set('force_latency', '6')
+
         mock_Command_run.assert_called_once_with(
             ['cpupower', 'idle-set', '--disable-by-latency', '6']
+        )
+        mock_os_makedirs.assert_called_once_with(
+            '/etc/systemd/system', exist_ok=True
+        )
+        service_handle.write.assert_called_once_with(
+            '[Service]\nExecStart=cpupower idle-set --disable-by-latency 6\n'
         )
 
     @patch('tiertune.command.Command.run')
@@ -30,12 +48,16 @@ class TestCPUPower:
         mock_CPUPower_set.assert_called_once_with('force_latency', '6')
 
     @patch('tiertune.cpupower.write_state_file')
+    @patch('tiertune.cpupower.CPUPower._write_service')
     @patch('tiertune.command.Command.run')
     def test_context_manager_writes_state_file(
-        self, mock_Command_run, mock_write_state_file
+        self, mock_Command_run, mock_write_service, mock_write_state_file
     ):
         with CPUPower() as cpupower:
             cpupower.set('force_latency', '6')
+        mock_write_service.assert_called_once_with(
+            ['cpupower', 'idle-set', '--disable-by-latency', '6']
+        )
         mock_Command_run.assert_called_once_with(
             ['cpupower', 'idle-set', '--disable-by-latency', '6']
         )

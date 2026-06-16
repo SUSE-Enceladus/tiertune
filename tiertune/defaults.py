@@ -43,6 +43,7 @@ USR_RUNTIME_CONFIG_DIR = {
 
 # systemd main settings overlay
 SYSTEMD_CONF = '/etc/systemd/system.conf.d/tiertune.conf'
+CPUPPOWER_SERVICE = '/etc/systemd/system/cpupower.service'
 
 # sysctl main settings overlay
 SYSCTL_CONF = '/etc/sysctl.d/tiertune.conf'

@@ -16,9 +16,11 @@
 # along with tiertune. If not, see <http://www.gnu.org/licenses/>
 #
 import logging as log
+import os
 from typing import Dict
 
 from tiertune.command import Command
+from tiertune.defaults import CPUPPOWER_SERVICE
 from tiertune.defaults import write_state_file
 from tiertune.instance_type.base import InstanceTypeBase
 
@@ -27,6 +29,10 @@ class CPUPower:
     """
     **Implements cpupower settings interface**
     """
+
+    _template_file = os.path.join(
+        os.path.dirname(__file__), 'template', 'cpupower.service'
+    )
 
     def __init__(self) -> None:
         self._set_called = False
@@ -45,12 +51,21 @@ class CPUPower:
         """
         self._set_called = True
         if key == 'force_latency' and value:
+            command = ['cpupower', 'idle-set', '--disable-by-latency', value]
             log.info(f'Set CPU setting: {key}={value}')
-            Command.run(['cpupower', 'idle-set', '--disable-by-latency', value])
+            self._write_service(command)
+            Command.run(command)
         else:
             log.info(
                 'Unknown CPU setting: {} with value {}'.format(key, value or '')
             )
+
+    def _write_service(self, command: list[str]) -> None:
+        with open(self._template_file, 'r') as template:
+            service = template.read().replace('$command', ' '.join(command))
+        os.makedirs(os.path.dirname(CPUPPOWER_SERVICE), exist_ok=True)
+        with open(CPUPPOWER_SERVICE, 'w') as service_file:
+            service_file.write(service)
 
     @staticmethod
     def apply(
