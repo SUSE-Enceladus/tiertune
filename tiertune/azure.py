@@ -39,7 +39,7 @@ def main() -> None:
         SysCtl.apply(instance_type, config)
         SystemD.apply(instance_type, config)
         CPUPower.apply(instance_type, config)
-    except TierTuneError as issue:
+    except (TierTuneError, IOError) as issue:
         # known exception, log information and exit
         log.error('{}: {}'.format(type(issue).__name__, issue))
         sys.exit(1)
