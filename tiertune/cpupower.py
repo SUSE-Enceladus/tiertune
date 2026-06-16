@@ -20,7 +20,7 @@ import os
 from typing import Dict
 
 from tiertune.command import Command
-from tiertune.defaults import CPUPPOWER_SERVICE
+from tiertune.defaults import CPUPOWER_SERVICE
 from tiertune.defaults import write_state_file
 from tiertune.instance_type.base import InstanceTypeBase
 
@@ -63,8 +63,8 @@ class CPUPower:
     def _write_service(self, command: list[str]) -> None:
         with open(self._template_file, 'r') as template:
             service = template.read().replace('$command', ' '.join(command))
-        os.makedirs(os.path.dirname(CPUPPOWER_SERVICE), exist_ok=True)
-        with open(CPUPPOWER_SERVICE, 'w') as service_file:
+        os.makedirs(os.path.dirname(CPUPOWER_SERVICE), exist_ok=True)
+        with open(CPUPOWER_SERVICE, 'w') as service_file:
             service_file.write(service)
 
     @staticmethod
