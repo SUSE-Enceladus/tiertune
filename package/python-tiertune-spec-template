@@ -55,6 +55,7 @@ BuildRequires:  %{pythons}-setuptools
 BuildRequires:  %{python_name}-ec2metadata
 BuildRequires:  %{python_name}-azuremetadata
 BuildRequires:  %{python_name}-gcemetadata
+BuildRequires:  systemd
 
 %description
 Tooling for the pubcloud team. Allows to pre-populate
@@ -117,6 +118,7 @@ Configure GCE cloud instances based on their specific instance type.
 
 install -d -m 755 %{buildroot}/%{_sbindir}
 install -d -m 755 %{buildroot}/etc
+install -d -m 755 %{buildroot}/var/cache/tiertune
 
 install -d -m 755 %{buildroot}/usr/lib/systemd/system
 install -m 644 systemd/tiertune-azure.service \
@@ -144,6 +146,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %config /usr/share/tiertune/tiertune-aws.yml
 %ghost /etc/systemd/system.conf.d/tiertune.conf
 %ghost /etc/sysctl.d/tiertune.conf
+%dir /var/cache/tiertune
 %ghost /var/cache/tiertune/settings_applied
 
 %files -n tiertune-azure
@@ -152,6 +155,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %config /usr/share/tiertune/tiertune-azure.yml
 %ghost /etc/systemd/system.conf.d/tiertune.conf
 %ghost /etc/sysctl.d/tiertune.conf
+%dir /var/cache/tiertune
 %ghost /var/cache/tiertune/settings_applied
 
 %files -n tiertune-gce
@@ -160,6 +164,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %config /usr/share/tiertune/tiertune-gce.yml
 %ghost /etc/systemd/system.conf.d/tiertune.conf
 %ghost /etc/sysctl.d/tiertune.conf
+%dir /var/cache/tiertune
 %ghost /var/cache/tiertune/settings_applied
 
 %changelog
