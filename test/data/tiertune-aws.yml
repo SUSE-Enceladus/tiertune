@@ -5,3 +5,5 @@ an_aws_instance_type_name:
     "DefaultTimeoutStartSec": "300s"
   cpupower:
     "force_latency": "6"
+  kernelworkqueue:
+    "watchdog_threshold": "120"

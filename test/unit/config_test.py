@@ -12,6 +12,7 @@ class TestConfig:
                 'sysctl': {'net.core.rmem_max': '83886080'},
                 'systemd': {'DefaultTimeoutStartSec': '300s'},
                 'cpupower': {'force_latency': '6'},
+                'kernelworkqueue': {'watchdog_threshold': '120'},
             }
         }
         assert Config.read('bogus') == {}
@@ -24,6 +25,7 @@ class TestConfig:
                 'sysctl': {'net.core.rmem_max': '83886080', 'some': 'some'},
                 'systemd': {'DefaultTimeoutStartSec': '300s'},
                 'cpupower': {'force_latency': '6'},
+                'kernelworkqueue': {'watchdog_threshold': '120'},
             }
         }
 
@@ -37,6 +39,7 @@ class TestConfig:
                 'sysctl': {'net.core.rmem_max': '83886080', 'some': 'some'},
                 'systemd': {'DefaultTimeoutStartSec': '300s'},
                 'cpupower': {'force_latency': '6'},
+                'kernelworkqueue': {'watchdog_threshold': '120'},
             }
         }
 

@@ -21,3 +21,5 @@
     "DefaultTimeoutStopSec": "300s"
   cpupower:
     "force_latency": "6"
+  kernelworkqueue:
+    "watchdog_threshold": "120"

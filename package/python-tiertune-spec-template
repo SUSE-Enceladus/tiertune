@@ -146,6 +146,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %config /usr/share/tiertune/tiertune-aws.yml
 %ghost /etc/systemd/system.conf.d/tiertune.conf
 %ghost /etc/systemd/system/cpupower.service
+%ghost /etc/systemd/system/kernelworkqueue.service
 %ghost /etc/sysctl.d/tiertune.conf
 %dir /var/cache/tiertune
 %ghost /var/cache/tiertune/settings_applied
@@ -156,6 +157,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %config /usr/share/tiertune/tiertune-azure.yml
 %ghost /etc/systemd/system.conf.d/tiertune.conf
 %ghost /etc/systemd/system/cpupower.service
+%ghost /etc/systemd/system/kernelworkqueue.service
 %ghost /etc/sysctl.d/tiertune.conf
 %dir /var/cache/tiertune
 %ghost /var/cache/tiertune/settings_applied
@@ -166,6 +168,7 @@ install -m 644 config/gce/tiertune-gce.yml \
 %config /usr/share/tiertune/tiertune-gce.yml
 %ghost /etc/systemd/system.conf.d/tiertune.conf
 %ghost /etc/systemd/system/cpupower.service
+%ghost /etc/systemd/system/kernelworkqueue.service
 %ghost /etc/sysctl.d/tiertune.conf
 %dir /var/cache/tiertune
 %ghost /var/cache/tiertune/settings_applied

@@ -47,6 +47,9 @@ SYSTEMD_CONF = '/etc/systemd/system.conf.d/tiertune.conf'
 # cpupower service overlay
 CPUPOWER_SERVICE = '/etc/systemd/system/cpupower.service'
 
+# kernelworkqueue service overlay
+KERNELWORKQUEUE_SERVICE = '/etc/systemd/system/kernelworkqueue.service'
+
 # sysctl main settings overlay
 SYSCTL_CONF = '/etc/sysctl.d/tiertune.conf'
 
