@@ -26,6 +26,7 @@ from urllib.request import Request, urlopen
 
 TARGET = 'https://registry.suse.com/v2/_catalog'
 SCOPE = 'registry:catalog:*'
+AUTH_SCHEME = 'Bearer'
 
 
 def get_auth_challenge(target: str) -> Optional[str]:
@@ -90,7 +91,7 @@ def main() -> int:
         return 1
 
     catalog = fetch_json(
-        TARGET, headers={'Authorization': f'{"Be" "arer"} {token}'}
+        TARGET, headers={'Authorization': f'{AUTH_SCHEME} {token}'}
     )
     json.dump(catalog, sys.stdout, indent=4)
     sys.stdout.write('\n')

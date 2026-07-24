@@ -26,7 +26,8 @@ class TestRegistryCatalog:
         mock_urlopen.return_value = Response(
             headers={
                 'Www-Authenticate': (
-                    'Be' 'arer realm="https://auth.example/token",'
+                    f'{registry_catalog.AUTH_SCHEME} '
+                    'realm="https://auth.example/token",'
                     'service="registry.example"'
                 )
             }
@@ -41,7 +42,12 @@ class TestRegistryCatalog:
             url='https://example.com',
             code=401,
             msg='Unauthorized',
-            hdrs={'Www-Authenticate': 'Be' 'arer realm="realm",service="svc"'},
+            hdrs={
+                'Www-Authenticate': (
+                    f'{registry_catalog.AUTH_SCHEME} '
+                    'realm="realm",service="svc"'
+                )
+            },
             fp=None,
         )
 
@@ -52,7 +58,8 @@ class TestRegistryCatalog:
 
     def test_extract_bearer_parameters(self):
         realm, service = registry_catalog.extract_bearer_parameters(
-            'Be' 'arer realm="https://auth.example/token",'
+            f'{registry_catalog.AUTH_SCHEME} '
+            'realm="https://auth.example/token",'
             'service="registry.example"'
         )
 
@@ -78,7 +85,7 @@ class TestRegistryCatalog:
         assert registry_catalog.fetch_json(
             'https://example.com',
             parameters={'service': 'svc', 'scope': 'scope'},
-            headers={'Authorization': 'Be' 'arer token'},
+            headers={'Authorization': f'{registry_catalog.AUTH_SCHEME} token'},
         ) == {'token': 'value'}
 
         request = mock_urlopen.call_args.args[0]
@@ -120,7 +127,8 @@ class TestRegistryCatalog:
         self, mock_challenge, mock_fetch_json, mock_stdout
     ):
         mock_challenge.return_value = (
-            'Be' 'arer realm="https://auth.example/token",'
+            f'{registry_catalog.AUTH_SCHEME} '
+            'realm="https://auth.example/token",'
             'service="registry.example"'
         )
         mock_fetch_json.return_value = {}
@@ -142,7 +150,8 @@ class TestRegistryCatalog:
     @patch('tiertune.registry_catalog.get_auth_challenge')
     def test_main_success(self, mock_challenge, mock_fetch_json, mock_stdout):
         mock_challenge.return_value = (
-            'Be' 'arer realm="https://auth.example/token",'
+            f'{registry_catalog.AUTH_SCHEME} '
+            'realm="https://auth.example/token",'
             'service="registry.example"'
         )
         mock_fetch_json.side_effect = [
