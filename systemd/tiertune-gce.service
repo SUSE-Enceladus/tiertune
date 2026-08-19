@@ -2,7 +2,8 @@
 Description=Configure GCE instance
 DefaultDependencies=no
 ConditionFirstBoot=yes
-After=local-fs.target
+After=local-fs.target network-online.target
+Wants=network-online.target
 ConditionPathExists=/usr/share/tiertune/tiertune-gce.yml
 
 [Service]
