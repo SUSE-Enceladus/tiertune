@@ -1,4 +1,4 @@
-"^.*/x[45]-*$":
+"^.*/x[45]-.*$":
   sysctl:
     "kernel.timer_migration": "0"
     "net.ipv4.ip_local_port_range": "9000 65499"
