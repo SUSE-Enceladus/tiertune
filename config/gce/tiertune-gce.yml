@@ -3,6 +3,7 @@
     "kernel.timer_migration": "0"
     "net.ipv4.ip_local_port_range": "9000 65499"
     "net.ipv4.tcp_window_scaling": "1"
+    "kernel.nmi_watchdog": "0"
     "kernel.sched_min_granularity_ns": "10000000"
     "kernel.sched_wakeup_granularity_ns": "15000000"
     "vm.memory_failure_early_kill": "1"
